@@ -16,6 +16,7 @@ server = app.server
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 df= pd.read_csv('/Users/Marc/Documents/GitHub/dash_app_example/nama_10_gdp_1_Data.csv')
+
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
