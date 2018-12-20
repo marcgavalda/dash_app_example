@@ -1,7 +1,6 @@
-
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import dash
@@ -11,11 +10,12 @@ import plotly.graph_objs as go
 import pandas as pd
 
 app = dash.Dash(__name__)
-server = app.server
+server= app.server
 
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
-df= pd.read_csv('/Users/Marc/Documents/GitHub/dash_app_example/nama_10_gdp_1_Data.csv')
+
+df= pd.read_csv('nama_10_gdp_1_Data.csv')
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
@@ -30,9 +30,10 @@ available_indicators = df['NA_ITEM'].unique()
 available_country = df['GEO'].unique()
 available_unit=df['UNIT'].unique()
 
-#First part layout
 app.layout = html.Div([
-    html.H1('Final Cloud Computing assignment',style={'textAlign': 'center'}),
+    html.H1('My first project: Indicators',style={'textAlign': 'center'}),
+    html.H2('Cecilia Montessoro',style={'textAlign': 'center', 'color': 'blue'}),
+    html.H3('Figure 1',style={'textAlign': 'center', 'size': 20,'color': 'red'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator for X axis'),
@@ -46,7 +47,8 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Current prices, million euro",
+                style={'width': '90%'})
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -55,7 +57,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value="Value added, gross"
+                value="Gross domestic product at market prices"
             ),
             
             html.Div(style={'height': 10, 'display': 'inline-block'}),
@@ -69,7 +71,10 @@ app.layout = html.Div([
     ]),
     html.Div(style={'height': 15, 'display': 'inline-block'}),
     
-    dcc.Graph(id='indicator-graphic'),
+    dcc.Graph(
+            id='indicator-graphic',
+            hoverData={'points': [{'customdata': 'Belgium'}]}
+        ),
     
     html.Div(style={'height': 30, 'display': 'inline-block'}),
     
@@ -83,7 +88,8 @@ app.layout = html.Div([
         ), 
     html.Div(style={'height': 80, 'display': 'inline-block'}),
     
-#Second part layout
+#SECOND PART LAYOUT 
+    html.H3('Figure 2', style={'textAlign': 'center', 'size': 20,'color': 'red'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator'),
@@ -93,22 +99,17 @@ app.layout = html.Div([
                 value="Gross domestic product at market prices"
             ),
             
-            html.Div(style={'height': 10, 'display': 'inline-block'}),
+            html.Div(style={'height': 10, 'display': 'inline-block'})],
+        style={'width': '48%', 'display': 'inline-block'}),
+
+        html.Div([
             html.Label('Select Unit Mesure'),
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
-        ],
-        style={'width': '48%', 'display': 'inline-block'}),
-
-        html.Div([
-            html.Label('Select Country'),
-            dcc.Dropdown(
-                id='country',
-                options=[{'label': i, 'value': i} for i in available_country],
-                value="Belgium"
-            ),
+                value="Current prices, million euro",
+                style={'width': '90%'}),
+            
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
                 id='axis_type_2',
@@ -124,7 +125,7 @@ app.layout = html.Div([
 ])
 
 
-#First figure 
+# FIRST GRAPH 
 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
@@ -136,14 +137,14 @@ app.layout = html.Div([
     
 def update_graph(xaxis_column_name, yaxis_column_name, 
                  axis_type,year_value,unit):
-    dff = df[df['TIME'] == year_value]
-    dfff= dff[dff['UNIT']==unit]
+    dff = df[(df['TIME'] == year_value) & (df['UNIT'] == unit)]
     
     return {
         'data': [go.Scatter(
-            x=dfff[(dfff['NA_ITEM'] == xaxis_column_name) & (dfff['GEO']== i)]['Value'],
-            y=dfff[(dfff['NA_ITEM'] == yaxis_column_name) & (dfff['GEO']== i)]['Value'],
-            text=dfff[(dfff['NA_ITEM'] == yaxis_column_name) & (dfff['GEO']== i)]['GEO'],
+            x=dff[(dff['NA_ITEM'] == xaxis_column_name) & (dff['GEO']== i)]['Value'],
+            y=dff[(dff['NA_ITEM'] == yaxis_column_name) & (dff['GEO']== i)]['Value'],
+            text=dff[(dff['NA_ITEM'] == yaxis_column_name) & (dff['GEO']== i)]['GEO'],
+            customdata=dff[(dff['NA_ITEM'] == yaxis_column_name)&(dff['GEO']== i)]['GEO'],
             mode='markers',
             marker={
                 'size': 15,
@@ -169,25 +170,23 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             hovermode='closest'
         )
     }
-
-#Second figure
+#SECOND GRAPH
 
 @app.callback(
     dash.dependencies.Output('indicator_graphic_country', 'figure'),
-    [dash.dependencies.Input('country', 'value'),
+    [dash.dependencies.Input('indicator-graphic', 'hoverData'),
      dash.dependencies.Input('yaxis_column_2', 'value'),
      dash.dependencies.Input('axis_type_2', 'value'),
      dash.dependencies.Input('unit_2', 'value')])
     
-def update_graph_2(country, yaxis_column_2,
+def update_graph_2(hoverData, yaxis_column_2,
                  axis_type_2,unit_2):
-    dff=df[df['GEO']== country]
-    dfff= dff[dff['UNIT']==unit_2]
+    dff= df[(df['UNIT']==unit_2)&(df['GEO']==hoverData['points'][0]['customdata'])]
     return {
         'data': [go.Scatter(
-            x=dfff['TIME'].unique(),
-            y=dfff[dfff['NA_ITEM'] == yaxis_column_2]['Value'],
-            text=dfff[dfff['NA_ITEM'] == yaxis_column_2]['GEO'],
+            x=dff['TIME'].unique(),
+            y=dff[dff['NA_ITEM'] == yaxis_column_2]['Value'],
+            text=dff[dff['NA_ITEM'] == yaxis_column_2]['GEO'],
             mode='lines+markers',
             marker={
                 'size': 15,
@@ -197,7 +196,7 @@ def update_graph_2(country, yaxis_column_2,
         )],
         
         'layout': go.Layout(
-            title= yaxis_column_2 + ' / ' + country,
+            title= yaxis_column_2 + ' / ' + hoverData['points'][0]['customdata'],
             xaxis={'title': 'Years',
                    'titlefont': dict(
                        size=16)
@@ -212,6 +211,7 @@ def update_graph_2(country, yaxis_column_2,
     }
 
 
+
+
 if __name__ == '__main__':
     app.run_server()
-
