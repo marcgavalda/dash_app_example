@@ -1,3 +1,4 @@
+
 # coding: utf-8
 
 # In[1]:
@@ -215,3 +216,7 @@ def update_graph_2(hoverData, yaxis_column_2,
 
 if __name__ == '__main__':
     app.run_server()
+
+
+
+
