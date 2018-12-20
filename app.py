@@ -12,7 +12,7 @@ app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
 
 df= pd.read_csv('nama_10_gdp_1_Data.csv')
 
-#CLEANING DATA
+#Cleaning data
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
@@ -27,7 +27,7 @@ available_indicators = df['NA_ITEM'].unique()
 available_country = df['GEO'].unique()
 available_unit=df['UNIT'].unique()
 
-#FIRST LAYOUT
+#First layout
 app.layout = html.Div([
     html.H1('Cloud Computing Final Assignment: Economic Indicators',style={'textAlign': 'center'}),
     html.H2('Relationship between indicators',style={'textAlign': 'left', 'size': 15,'color': 'black'}),
@@ -96,7 +96,7 @@ app.layout = html.Div([
             ),
             
             html.Div(style={'height': 10, 'display': 'inline-block'}),
-            html.Label('Select Unit Mesure'),
+            html.Label('Select Unit'),
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
@@ -126,8 +126,7 @@ app.layout = html.Div([
 ])
 
 
-# FIRST GRAPH 
-
+# First graph 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
     [dash.dependencies.Input('xaxis-column', 'value'),
@@ -171,8 +170,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             hovermode='closest'
         )
     }
-#SECOND GRAPH
-
+#Second graph
 @app.callback(
     dash.dependencies.Output('indicator_graphic_country', 'figure'),
     [dash.dependencies.Input('country', 'value'),
