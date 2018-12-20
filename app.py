@@ -40,7 +40,7 @@ app.layout = html.Div([
                 value="Gross domestic product at market prices"
             ),
             html.Div(style={'height': 10, 'display': 'inline-block'}),
-            html.Label('Select Unit Mesure'),
+            html.Label('Select Unit'),
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
@@ -86,46 +86,35 @@ app.layout = html.Div([
     
 #SECOND PART LAYOUT 
     html.H3('Evolution of Indicator, by country', style={'textAlign': 'left', 'size': 15,'color': 'black'}),
-    html.Div([
+     html.Div([
+             html.H2(children=''),
         html.Div([
-            html.Label('Select Indicator for X axis'),
+            html.Label('Select Indicator'),
             dcc.Dropdown(
-                id='yaxis_column_2',
+                id='xaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value="Gross domestic product at market prices"
-            ),
-            
-            html.Div(style={'height': 10, 'display': 'inline-block'}),
-            html.Label('Select Unit Mesure'),
-            dcc.Dropdown(
-                id='unit_2',
-                options=[{'label': i, 'value': i} for i in available_unit],
-                value="Chain linked volumes, index 2010=100")
-        ],
-        style={'width': '48%', 'display': 'inline-block'}),
-
+                value='Gross domestic product at market prices'
+            )],style={'width': '40%', 'display': 'inline-block','margin': 20}),
         html.Div([
-            html.Label('Select Country'),
+            html.Label('Select country'),
             dcc.Dropdown(
-                id='country',
+                id='yaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_country],
-                value="Belgium"
-            ),
-            
-            html.Div(style={'height': 10, 'display': 'inline-block'}),
+                value='Belgium')],
+            style={'width': '40%', 'float':'right', 'display': 'inline-block','margin': 20}),
+     html.Div([
             dcc.RadioItems(
-                id='axis_type_2',
-                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
-                value='Linear'
-            )
-        ],
-        style={'width': '48%', 'float': 'right', 'display': 'inline-block'})       
+                id='unit',
+                options=[{'label': i, 'value': i} for i in available_unit],
+                value='Chain linked volumes, index 2010=100',
+                labelStyle={'display': 'inline-block','margin':10}
+            )],
+            style={'width': '88%', 'display': 'inline-block','margin': 30})
     ]),
-    html.Div(style={'height': 15, 'display': 'inline-block'}),
-    dcc.Graph(id='indicator_graphic_country')
+
+    dcc.Graph(id='country-indicator-graphic')
 ])
-
-
+    
 # FIRST INDICATOR 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
@@ -173,39 +162,32 @@ def update_graph(xaxis_column_name, yaxis_column_name,
 
 #SECOND INDICATOR
 @app.callback(
-    dash.dependencies.Output('indicator_graphic_country', 'figure'),
-    [dash.dependencies.Input('indicator-graphic', 'hoverData'),
-     dash.dependencies.Input('yaxis_column_2', 'value'),
-     dash.dependencies.Input('axis_type_2', 'value'),
-     dash.dependencies.Input('unit_2', 'value')])
-    
-def update_graph_2(hoverData, yaxis_column_2,
-                 axis_type_2,unit_2):
-    dff= df[(df['UNIT']==unit_2)&(df['GEO']==hoverData['points'][0]['customdata'])]
-    return {
+    dash.dependencies.Output('country-indicator-graphic', 'figure'),
+    [dash.dependencies.Input('xaxis-column2', 'value'),
+     dash.dependencies.Input('yaxis-column2', 'value'), 
+     dash.dependencies.Input('unit', 'value')])
+def update_graph(xaxis_column_name, yaxis_column_name, unit):
+        dff = df[(df['GEO'] == yaxis_column_name) & (df['UNIT'] == unit)]
+        return {
         'data': [go.Scatter(
-            x=dff['TIME'].unique(),
-            y=dff[dff['NA_ITEM'] == yaxis_column_2]['Value'],
-            text=dff[dff['NA_ITEM'] == yaxis_column_2]['GEO'],
-            mode='lines+markers',
+            x=dff[dff['NA_ITEM'] == xaxis_column_name]['TIME'],
+            y=dff[dff['NA_ITEM'] == xaxis_column_name]['Value'],
+            text=dff[dff['NA_ITEM'] == yaxis_column_name]['GEO'],
+            mode='lines',
+            line=dict(
+                color= ('rgb(170,24,175)')),
             marker={
                 'size': 15,
                 'opacity': 0.5,
                 'line': {'width': 0.5, 'color': 'white'}
             }
         )],
-        
         'layout': go.Layout(
-            title= yaxis_column_2 + ' / ' + hoverData['points'][0]['customdata'],
-            xaxis={'title': 'Years',
-                   'titlefont': dict(
-                       size=16)
-                  },
-            yaxis={
-                'title': yaxis_column_2 +'\n' + ', million euro',
-                'titlefont': dict(size=16),
-                'type': 'linear' if axis_type_2 == 'Linear' else 'log'},
-            margin={'l': 100, 'b': 60, 't': 60, 'r': 100},
+            
+            xaxis={'title': xaxis_column_name},
+            yaxis={'title': yaxis_column_name},
+            margin={'l': 60, 'b': 60, 't': 60, 'r': 60},
+            title= 'Evolution of indicator from 2008 to 2017',
             hovermode='closest'
         )
     }
