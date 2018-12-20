@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -11,12 +5,12 @@ import plotly.graph_objs as go
 import pandas as pd
 
 app = dash.Dash(__name__)
-server= app.server
+server = app.server
 
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 
-df= pd.read_csv('nama_10_gdp_1_Data.csv')
+df = pd.read_csv('nama_10_gdp_1_Data.csv')
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
@@ -32,9 +26,8 @@ available_country = df['GEO'].unique()
 available_unit=df['UNIT'].unique()
 
 app.layout = html.Div([
-    html.H1('My first project: Indicators',style={'textAlign': 'center'}),
-    html.H2('Cecilia Montessoro',style={'textAlign': 'center', 'color': 'blue'}),
-    html.H3('Figure 1',style={'textAlign': 'center', 'size': 20,'color': 'red'}),
+    html.H1('Cloud Computing Final Assigment',style={'textAlign': 'center'}),
+    html.H2('Figure 1',style={'textAlign': 'center', 'size': 20,'color': 'red'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator for X axis'),
@@ -48,8 +41,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro",
-                style={'width': '90%'})
+                value="Current prices, million euro")
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -108,8 +100,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro",
-                style={'width': '90%'}),
+                value="Current prices, million euro"),
             
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
@@ -126,8 +117,7 @@ app.layout = html.Div([
 ])
 
 
-# FIRST GRAPH 
-
+# FIRST INDICATOR 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
     [dash.dependencies.Input('xaxis-column', 'value'),
@@ -171,8 +161,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             hovermode='closest'
         )
     }
-#SECOND GRAPH
 
+#SECOND INDICATOR
 @app.callback(
     dash.dependencies.Output('indicator_graphic_country', 'figure'),
     [dash.dependencies.Input('indicator-graphic', 'hoverData'),
@@ -211,12 +201,5 @@ def update_graph_2(hoverData, yaxis_column_2,
         )
     }
 
-
-
-
 if __name__ == '__main__':
     app.run_server()
-
-
-
-
