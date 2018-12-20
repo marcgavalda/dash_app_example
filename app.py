@@ -27,7 +27,7 @@ available_unit=df['UNIT'].unique()
 
 app.layout = html.Div([
     html.H1('Cloud Computing Final Assigment',style={'textAlign': 'center'}),
-    html.H2('Figure 1',style={'textAlign': 'center', 'size': 20,'color': 'red'}),
+    html.H2('Relationship between indicators, by country',style={'textAlign': 'center', 'size': 15,'color': 'black'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator for X axis'),
@@ -92,16 +92,22 @@ app.layout = html.Div([
                 value="Gross domestic product at market prices"
             ),
             
-            html.Div(style={'height': 10, 'display': 'inline-block'})],
-        style={'width': '48%', 'display': 'inline-block'}),
-
-        html.Div([
+            html.Div(style={'height': 10, 'display': 'inline-block'}),
             html.Label('Select Unit Mesure'),
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro"),
-            
+                value="Current prices, million euro")
+        ],
+        style={'width': '48%', 'display': 'inline-block'}),
+
+        html.Div([
+            html.Label('Select Country'),
+            dcc.Dropdown(
+                id='country',
+                options=[{'label': i, 'value': i} for i in available_country],
+                value="Belgium"
+            ),
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
                 id='axis_type_2',
@@ -113,7 +119,6 @@ app.layout = html.Div([
     ]),
     html.Div(style={'height': 15, 'display': 'inline-block'}),
     dcc.Graph(id='indicator_graphic_country')
-
 ])
 
 
