@@ -1,3 +1,9 @@
+
+# coding: utf-8
+
+# In[1]:
+
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -42,7 +48,8 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Current prices, million euro",
+                style={'width': '90%'})
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -101,7 +108,8 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro"),
+                value="Current prices, million euro",
+                style={'width': '90%'}),
             
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
@@ -208,3 +216,7 @@ def update_graph_2(hoverData, yaxis_column_2,
 
 if __name__ == '__main__':
     app.run_server()
+
+
+
+
