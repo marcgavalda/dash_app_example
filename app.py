@@ -40,11 +40,11 @@ app.layout = html.Div([
                 value="Gross domestic product at market prices"
             ),
             html.Div(style={'height': 10, 'display': 'inline-block'}),
-            html.Label('Select Unit Mesure'),
+            html.Label('Select Unit'),
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Chain linked volumes, index 2010=100")
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -85,7 +85,7 @@ app.layout = html.Div([
     html.Div(style={'height': 80, 'display': 'inline-block'}),
     
 #SECOND PART LAYOUT 
-     html.H3('Figure 2', style={'textAlign': 'center', 'size': 20,'color': 'red'}),
+     html.H3('Evolution of indicator, by country', style={'textAlign': 'left', 'size': 15,'color': 'black'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator'),
@@ -100,7 +100,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Chain linked volumes, index 2010=100")
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
