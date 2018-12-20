@@ -53,7 +53,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value="Gross domestic product at market prices"
+                value="Collective consumption expenditure of general government"
             ),
             
             html.Div(style={'height': 10, 'display': 'inline-block'}),
@@ -109,7 +109,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='country',
                 options=[{'label': i, 'value': i} for i in available_country],
-                value="Belgium"
+                value="Portugal"
             ),
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
