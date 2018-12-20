@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import dash
@@ -11,12 +11,10 @@ import plotly.graph_objs as go
 import pandas as pd
 
 app = dash.Dash(__name__)
-server = app.server
-
+server=app.server
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 df= pd.read_csv('nama_10_gdp_1_Data.csv')
-
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
@@ -31,9 +29,10 @@ available_indicators = df['NA_ITEM'].unique()
 available_country = df['GEO'].unique()
 available_unit=df['UNIT'].unique()
 
-#First part layout
 app.layout = html.Div([
-    html.H1('Final Cloud Computing assignment',style={'textAlign': 'center'}),
+    html.H1('My first project: Indicators',style={'textAlign': 'center'}),
+    html.H2('Cecilia Montessoro',style={'textAlign': 'center', 'color': 'blue'}),
+    html.H3('Figure 1',style={'textAlign': 'center', 'size': 20,'color': 'red'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator for X axis'),
@@ -47,7 +46,8 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Current prices, million euro",
+                style={'width': '90%'})
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -56,7 +56,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value="Value added, gross"
+                value="Gross domestic product at market prices"
             ),
             
             html.Div(style={'height': 10, 'display': 'inline-block'}),
@@ -84,7 +84,8 @@ app.layout = html.Div([
         ), 
     html.Div(style={'height': 80, 'display': 'inline-block'}),
     
-#Second part layout
+#SECOND PART LAYOUT 
+    html.H3('Figure 2', style={'textAlign': 'center', 'size': 20,'color': 'red'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator'),
@@ -99,7 +100,8 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Current prices, million euro",
+                style={'width': '90%'})
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -125,7 +127,7 @@ app.layout = html.Div([
 ])
 
 
-#First figure 
+# FIRST GRAPH 
 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
@@ -171,7 +173,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
         )
     }
 
-#Second figure
+#SECOND GRAPH
 
 @app.callback(
     dash.dependencies.Output('indicator_graphic_country', 'figure'),
@@ -213,6 +215,8 @@ def update_graph_2(country, yaxis_column_2,
     }
 
 
+
 if __name__ == '__main__':
     app.run_server()
+
 
