@@ -85,7 +85,7 @@ app.layout = html.Div([
     html.Div(style={'height': 80, 'display': 'inline-block'}),
     
 #SECOND PART LAYOUT 
-    html.H3('Evolution of indicators, by country', style={'textAlign': 'left', 'size': 15,'color': 'black'}),
+     html.H3('Figure 2', style={'textAlign': 'center', 'size': 20,'color': 'red'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator'),
@@ -95,16 +95,22 @@ app.layout = html.Div([
                 value="Gross domestic product at market prices"
             ),
             
-            html.Div(style={'height': 10, 'display': 'inline-block'})],
-        style={'width': '48%', 'display': 'inline-block'}),
-
-        html.Div([
+            html.Div(style={'height': 10, 'display': 'inline-block'}),
             html.Label('Select Unit Mesure'),
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro"),
-            
+                value="Current prices, million euro")
+        ],
+        style={'width': '48%', 'display': 'inline-block'}),
+
+        html.Div([
+            html.Label('Select Country'),
+            dcc.Dropdown(
+                id='country',
+                options=[{'label': i, 'value': i} for i in available_country],
+                value="Belgium"
+            ),
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
                 id='axis_type_2',
@@ -169,19 +175,20 @@ def update_graph(xaxis_column_name, yaxis_column_name,
 
 @app.callback(
     dash.dependencies.Output('indicator_graphic_country', 'figure'),
-    [dash.dependencies.Input('indicator-graphic', 'hoverData'),
+    [dash.dependencies.Input('country', 'value'),
      dash.dependencies.Input('yaxis_column_2', 'value'),
      dash.dependencies.Input('axis_type_2', 'value'),
      dash.dependencies.Input('unit_2', 'value')])
     
-def update_graph_2(hoverData, yaxis_column_2,
+def update_graph_2(country, yaxis_column_2,
                  axis_type_2,unit_2):
-    dff= df[(df['UNIT']==unit_2)&(df['GEO']==hoverData['points'][0]['customdata'])]
+    dff=df[df['GEO']== country]
+    dfff= dff[dff['UNIT']==unit_2]
     return {
         'data': [go.Scatter(
-            x=dff['TIME'].unique(),
-            y=dff[dff['NA_ITEM'] == yaxis_column_2]['Value'],
-            text=dff[dff['NA_ITEM'] == yaxis_column_2]['GEO'],
+            x=dfff['TIME'].unique(),
+            y=dfff[dfff['NA_ITEM'] == yaxis_column_2]['Value'],
+            text=dfff[dfff['NA_ITEM'] == yaxis_column_2]['GEO'],
             mode='lines+markers',
             marker={
                 'size': 15,
@@ -191,7 +198,7 @@ def update_graph_2(hoverData, yaxis_column_2,
         )],
         
         'layout': go.Layout(
-            title= yaxis_column_2 + ' / ' + hoverData['points'][0]['customdata'],
+            title= yaxis_column_2 + ' / ' + country,
             xaxis={'title': 'Years',
                    'titlefont': dict(
                        size=16)
@@ -204,6 +211,7 @@ def update_graph_2(hoverData, yaxis_column_2,
             hovermode='closest'
         )
     }
+
 
 
 if __name__ == '__main__':
