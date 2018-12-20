@@ -11,13 +11,14 @@ app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
 
 
 df = pd.read_csv('nama_10_gdp_1_Data.csv')
+
 #DATA CLEANING
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
                     "Euro area (EA11-2000, EA12-2006, EA13-2007, EA15-2008, EA16-2010, EA17-2013, EA18-2014, EA19)",
-                    "Euro area (19 countries)",
-                    "Euro area (12 countries)"])].index)
+                    "Euro area (12 countries)",
+                    "Euro area (19 countries)"])].index)
 
 df= df.drop(columns=['Flag and Footnotes'])
 df= df.drop(df[df.Value.isin([':'])].index) 
@@ -43,7 +44,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Chain linked volumes, index 2010=100")
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
@@ -84,7 +85,7 @@ app.layout = html.Div([
     html.Div(style={'height': 80, 'display': 'inline-block'}),
     
 #SECOND PART LAYOUT 
-    html.H3('Indicator, by year', style={'textAlign': 'left', 'size': 15,'color': 'black'}),
+    html.H3('Evolution of Indicator, by country', style={'textAlign': 'left', 'size': 15,'color': 'black'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator for X axis'),
@@ -99,7 +100,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='unit_2',
                 options=[{'label': i, 'value': i} for i in available_unit],
-                value="Current prices, million euro")
+                value="Chain linked volumes, index 2010=100")
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
