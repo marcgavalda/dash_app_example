@@ -11,6 +11,7 @@ app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
 
 
 df = pd.read_csv('nama_10_gdp_1_Data.csv')
+#DATA CLEANING
 df = df.drop(df[df.GEO.isin(["European Union (current composition)",
                     "European Union (without United Kingdom)",
                     "European Union (15 countries)",
@@ -25,9 +26,10 @@ available_indicators = df['NA_ITEM'].unique()
 available_country = df['GEO'].unique()
 available_unit=df['UNIT'].unique()
 
+#FIRST PART LAYOUT
 app.layout = html.Div([
     html.H1('Cloud Computing Final Assigment',style={'textAlign': 'center'}),
-    html.H2('Relationship between indicators, by country',style={'textAlign': 'center', 'size': 15,'color': 'black'}),
+    html.H2('Relationship between indicators, by country',style={'textAlign': 'left', 'size': 15,'color': 'black'}),
     html.Div([
         html.Div([
             html.Label('Select Indicator for X axis'),
@@ -82,10 +84,10 @@ app.layout = html.Div([
     html.Div(style={'height': 80, 'display': 'inline-block'}),
     
 #SECOND PART LAYOUT 
-    html.H3('Figure 2', style={'textAlign': 'center', 'size': 20,'color': 'red'}),
+    html.H3('Indicator, by year', style={'textAlign': 'left', 'size': 15,'color': 'black'}),
     html.Div([
         html.Div([
-            html.Label('Select Indicator'),
+            html.Label('Select Indicator for X axis'),
             dcc.Dropdown(
                 id='yaxis_column_2',
                 options=[{'label': i, 'value': i} for i in available_indicators],
@@ -108,6 +110,7 @@ app.layout = html.Div([
                 options=[{'label': i, 'value': i} for i in available_country],
                 value="Belgium"
             ),
+            
             html.Div(style={'height': 10, 'display': 'inline-block'}),
             dcc.RadioItems(
                 id='axis_type_2',
